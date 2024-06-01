@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Sum Calculator</title>
+</head>
+
+<body>
+    <input oninput="debouncingPopulateDiv()" id="firstNumber" type="text" placeholder="First Number">
+    <input oninput="debouncingPopulateDiv()" id="secondNumber" type="text" placeholder="Second Number">
+
+    <button onclick="populateDiv()">Calculate Sum</button> <br><br>
+    <div id="finalSum"></div>
+
+    <script>
+        let timeout;
+        function debouncingPopulateDiv() {
+            // this waitsn for 100ms before caling the populatediv and if he doesn't
+            // reciverget calleed then call
+            clearTimeout(timeout);
+
+            timeout = setTimeout(function () {
+                populateDiv()
+            }, 100);
+
+
+        }
+
+
+        function populateDiv() {
+            const a = document.getElementById("firstNumber").value;
+            const b = document.getElementById("secondNumber").value;
+
+            // const element = document.getElementById("finalSum")
+            //element.innerHTML = parseInt(num1) + parseInt(num2);
+
+
+            fetch("https://sum-server.100xdevs.com/sum?a=" + a + "&b" + b)
+                .then(function (response) {
+                    return response.text()
+                }).then(function (ans) {
+                    document.getElementById("finalSum").innerHTML = ans;
+                })
+
+        }
+    </script>
+</body>
+
+</html>
+
+
+
+
+
+
+<!-- now every time the input chanfes just calcualte this 
+ont need to press the bbuttom so remove this
+
+-->
+
+<!-- make few changes such as <input oninput="populatediv" -->
+<!--but here everey key pressed to input send the request outside
+so optimize it little
+
+-->
+
+<!-- so that debouncing 
+    so if server ignored 3 request and then accepts lasts thats throatling
+
+-->

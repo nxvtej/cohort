@@ -1,0 +1,95 @@
+
+<!-- in this i learnt about the parent and child creating in js 
+    by using createElement and then appending another into the parent
+    taking example of todo list where we needed multiple div inside the div
+
+    div
+        div title
+        div desctiotion
+        button globalid
+
+    /div
+
+
+    this is needed for every taskk
+
+    so to create this i have used
+
+    child = docuemtn.createElement("div");
+    const firstGrandParetn = 
+    .. so on
+
+    then all appended to only one
+
+    child.appendChild(firstGrandParent);
+    child.appendChild(secondGrandParent);
+    child.appendChild(thirdGrandParent);
+
+    return child;
+
+
+ SO BASICALLY ITS A STRUCTURE
+
+-->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script>
+        let globalId=0;
+
+        function markAsDone(todoid) {
+            console.log(todoid);
+            //now setting it to done
+            const buttonUpdate = document.getElementById(todoid);
+            buttonUpdate.children[2].innerHTML = "Done!";
+        }
+        function createChild(title, description, id){
+            
+            const child = document.createElement("div");
+            const grandChild1 = document.createElement("div");
+            const grandChild2 = document.createElement("div");
+            const grandChild3 = document.createElement("button");
+
+            grandChild1.innerHTML = title;
+            grandChild2.innerHTML = description;
+            grandChild3.innerHTML = "Mark as Done";
+
+            // here in grandchild 3 add id and increase it then change it to done
+            grandChild3.setAttribute("onClick",  `markAsDone(${id})`);
+
+            child.appendChild(grandChild1);
+            child.appendChild(grandChild2);
+            child.appendChild(grandChild3);
+
+            //set id to child div such that i can see the numbering
+            child.setAttribute("id", id);
+
+
+            return child;
+
+        }
+
+        function addTodo() {
+            const title = document.getElementById("title").value;
+            const description = document.getElementById("description").value;
+            const parent = document.getElementById("container");
+
+
+            //here creating a append with function call to where it willb created
+            parent.appendChild(createChild(title, description, globalId++));
+        }
+
+    </script>
+</head>
+<body>
+    <input id="title" type="text" placeholder="Todo titile"><br><br>
+    <input id="description" type="text" placeholder="todo description"> <br><br>
+    <button onclick="addTodo()">Add Todo</button>
+
+    <div id="container"></div>
+    <!-- this div will be where everything comes via append -->
+</body>
+</html>

@@ -1,0 +1,47 @@
+1. pwd //print working directory
+PS C:\Users\nxvte.NXVTEJ\Desktop\cohort\week2\bashAndTerminals> pwd
+
+Path
+----
+C:\Users\nxvte.NXVTEJ\Desktop\cohort\week2\bashAndTerminals
+
+
+-------------------------------------
+
+2. cd
+-------------------
+3. ls
+PS C:\Users\nxvte.NXVTEJ\Desktop\cohort\week2\bashAndTerminals> ls
+
+
+    Directory: C:\Users\nxvte.NXVTEJ\Desktop\cohort\week2\bashAndTerminals
+
+
+Mode                 LastWriteTime         Length Name
+----                 -------------         ------ ----
+-a----        23-05-2024  05.33 PM              0 notes.txt
+
+--------------------------------------
+
+4. mkdir  creates folders
+
+PS C:\Users\nxvte.NXVTEJ\Desktop\cohort\week2\bashAndTerminals> mkdir test
+
+
+    Directory: C:\Users\nxvte.NXVTEJ\Desktop\cohort\week2\bashAndTerminals
+
+
+Mode                 LastWriteTime         Length Name
+----                 -------------         ------ ----
+d-----        23-05-2024  05.35 PM                test
+
+
+--------------------------------
+5. touch 
+to create a new file
+-----------------------
+
+6. cat //print content of file
+7. cat test/inde.js
+--------------------
+8. vi
