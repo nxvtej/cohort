@@ -1,56 +1,35 @@
+<!-- 
+    now problem is server will have multiple users/clients so it will have many request 
+    eg. +3 new todo
+    +2 new todo
+    -2 todo
+    2 edit
 
-<!-- in this i learnt about the parent and child creating in js 
-    by using createElement and then appending another into the parent
-    taking example of todo list where we needed multiple div inside the div
+    all these will need to be processed
+    thus we need remove, edit funtionalities 
+    and earlier format is not good as on receiving 4 new request it cant
+    differentiate between new and old  which makes dom manipulation much harder.
 
-    div
-        div title
-        div desctiotion
-        button globalid
+ -->
 
-    /div
-
-
-    this is needed for every taskk
-
-    so to create this i have used
-
-    child = docuemtn.createElement("div");
-    const firstGrandParetn = 
-    .. so on
-
-    then all appended to only one
-
-    child.appendChild(firstGrandParent);
-    child.appendChild(secondGrandParent);
-    child.appendChild(thirdGrandParent);
-
-    return child;
+ <!-- GETTING DATA FROM SERVER -->
 
 
- SO BASICALLY ITS A STRUCTURE
-
-
- document.createElement
- document.appendChild
- element.setAttribute
- element.children;
-
- pne more remove a child
-
-
-
- 
-
--->
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+<body>
+    
+    <input id="title" type="text" placeholder="Todo titile"><br><br>
+    <input id="description" type="text" placeholder="todo description"> <br><br>
+    <!-- <button onclick="addTodo()">Add Todo</button> -->
+
+    <div id="container"></div>
+    <!-- this div will be where everything comes via append -->
+
+
+    <!-- here is the script  -->
     <script>
-        let globalId=0;
+        let globalId=1;
 
         function markAsDone(todoid) {
             console.log(todoid);
@@ -83,7 +62,7 @@
             return child;
 
         }
-
+/*
         function addTodo() {
             const title = document.getElementById("title").value;
             const description = document.getElementById("description").value;
@@ -93,15 +72,26 @@
             //here creating a append with function call to where it willb created
             parent.appendChild(createChild(title, description, globalId++));
         }
+*/
+
+        function updateDomAccordingToState( state ){
+            const parent =document.getElementById("container");
+            parent.innerHTML= ""; //cleared container 
+
+            for(let i=0;i<state.length;i++){
+                const child = createChild(state[i].title, state[i].description, state[i].id);
+                parent.appendChild(child);
+            }
+        }
+
+        // getting data form back-end server
+        window.setInterval(async function() {
+            const response = await fetch('https://sum-server.100xdevs.com/todos');
+            const json = await response.json();
+
+            updateDomAccordingToState(json.todos);
+        }, 5000);
 
     </script>
-</head>
-<body>
-    <input id="title" type="text" placeholder="Todo titile"><br><br>
-    <input id="description" type="text" placeholder="todo description"> <br><br>
-    <button onclick="addTodo()">Add Todo</button>
-
-    <div id="container"></div>
-    <!-- this div will be where everything comes via append -->
 </body>
 </html>
