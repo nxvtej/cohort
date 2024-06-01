@@ -13,85 +13,103 @@
  -->
 
  <!-- GETTING DATA FROM SERVER -->
-
-
-<!DOCTYPE html>
-<html lang="en">
-<body>
-    
-    <input id="title" type="text" placeholder="Todo titile"><br><br>
-    <input id="description" type="text" placeholder="todo description"> <br><br>
-    <!-- <button onclick="addTodo()">Add Todo</button> -->
-
-    <div id="container"></div>
-    <!-- this div will be where everything comes via append -->
-
-
-    <!-- here is the script  -->
-    <script>
-        let globalId=1;
-
-        function markAsDone(todoid) {
-            console.log(todoid);
-            //now setting it to done
-            const buttonUpdate = document.getElementById(todoid);
-            buttonUpdate.children[2].innerHTML = "Done!";
-        }
-        function createChild(title, description, id){
-            
-            const child = document.createElement("div");
-            const grandChild1 = document.createElement("div");
-            const grandChild2 = document.createElement("div");
-            const grandChild3 = document.createElement("button");
-
-            grandChild1.innerHTML = title;
-            grandChild2.innerHTML = description;
-            grandChild3.innerHTML = "Mark as Done";
-
-            // here in grandchild 3 add id and increase it then change it to done
-            grandChild3.setAttribute("onClick",  `markAsDone(${id})`);
-
-            child.appendChild(grandChild1);
-            child.appendChild(grandChild2);
-            child.appendChild(grandChild3);
-
-            //set id to child div such that i can see the numbering
-            child.setAttribute("id", id);
-
-
-            return child;
-
-        }
-/*
-        function addTodo() {
-            const title = document.getElementById("title").value;
-            const description = document.getElementById("description").value;
-            const parent = document.getElementById("container");
-
-
-            //here creating a append with function call to where it willb created
-            parent.appendChild(createChild(title, description, globalId++));
-        }
-*/
-
-        function updateDomAccordingToState( state ){
-            const parent =document.getElementById("container");
-            parent.innerHTML= ""; //cleared container 
-
-            for(let i=0;i<state.length;i++){
-                const child = createChild(state[i].title, state[i].description, state[i].id);
-                parent.appendChild(child);
-            }
-        }
-
-        // getting data form back-end server
-        window.setInterval(async function() {
-            const response = await fetch('https://sum-server.100xdevs.com/todos');
-            const json = await response.json();
-
-            updateDomAccordingToState(json.todos);
-        }, 5000);
-
-    </script>
-</body>
-</html>
+ <!DOCTYPE html>
+ <html lang="en">
+ <body>
+     
+     <input id="title" type="text" placeholder="Todo title"><br><br>
+     <input id="description" type="text" placeholder="todo description"> <br><br>
+     <!-- <button onclick="addTodo()">Add Todo</button> -->
+ 
+     <div id="container"></div>
+     <!-- this div will be where everything comes via append -->
+ 
+     <!-- here is the script  -->
+     <script>
+         let globalId = 1;
+         let currentState = [];
+ 
+         function markAsDone(todoid) {
+             console.log(todoid);
+             //now setting it to done
+             const buttonUpdate = document.getElementById(todoid);
+             buttonUpdate.children[2].innerHTML = "Done!";
+         }
+ 
+         function createChild(title, description, id){
+             const child = document.createElement("div");
+             const grandChild1 = document.createElement("div");
+             const grandChild2 = document.createElement("div");
+             const grandChild3 = document.createElement("button");
+ 
+             grandChild1.innerHTML = title;
+             grandChild2.innerHTML = description;
+             grandChild3.innerHTML = "Mark as Done";
+ 
+             // here in grandchild 3 add id and increase it then change it to done
+             grandChild3.setAttribute("onClick", `markAsDone(${id})`);
+ 
+             child.appendChild(grandChild1);
+             child.appendChild(grandChild2);
+             child.appendChild(grandChild3);
+ 
+             //set id to child div such that i can see the numbering
+             child.setAttribute("id", id);
+ 
+             return child;
+         }
+ 
+         function updateDomAccordingToState(newState) {
+             const parent = document.getElementById("container");
+             
+             // Create a map of the new state for easy lookup
+             const newStateMap = new Map();
+             newState.forEach(todo => newStateMap.set(todo.id, todo));
+ 
+             // Create a set of current state IDs
+             const currentStateIds = new Set(currentState.map(todo => todo.id));
+ 
+             // Remove outdated elements
+             currentState.forEach(todo => {
+                 if (!newStateMap.has(todo.id)) {
+                     const childToRemove = document.getElementById(todo.id);
+                     if (childToRemove) {
+                         parent.removeChild(childToRemove);
+                     }
+                 }
+             });
+ 
+             // Add new or updated elements
+             newState.forEach(todo => {
+                 const existingChild = document.getElementById(todo.id);
+                 if (existingChild) {
+                     if (existingChild.children[0].innerHTML !== todo.title ||
+                         existingChild.children[1].innerHTML !== todo.description) {
+                         existingChild.children[0].innerHTML = todo.title;
+                         existingChild.children[1].innerHTML = todo.description;
+                     }
+                 } else {
+                     const newChild = createChild(todo.title, todo.description, todo.id);
+                     parent.appendChild(newChild);
+                 }
+             });
+ 
+             // Update the current state
+             currentState = newState;
+         }
+ 
+         // getting data from back-end server
+         window.setInterval(async function() {
+             try {
+                 const response = await fetch('https://sum-server.100xdevs.com/todos');
+                 const json = await response.json();
+                 updateDomAccordingToState(json.todos);
+             } catch (error) {
+                 console.error('Error fetching todos:', error);
+             }
+         }, 5000);
+ 
+     </script>
+ </body>
+ </html>
+ 

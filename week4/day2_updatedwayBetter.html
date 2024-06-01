@@ -1,0 +1,89 @@
+<!-- 
+
+    in this approach we dont rendser it directly
+    instead we will calculate dif 
+    then check whtas the changes and then add to the dom 
+    dont refresh completely 
+
+ -->
+
+<!DOCTYPE html>
+<html lang="en">
+<body>
+    
+    <input id="title" type="text" placeholder="Todo titile"><br><br>
+    <input id="description" type="text" placeholder="todo description"> <br><br>
+    <!-- <button onclick="addTodo()">Add Todo</button> -->
+
+    <div id="container"></div>
+    <!-- this div will be where everything comes via append -->
+
+
+    <!-- here is the script  -->
+    <script>
+        let globalId=1;
+
+        function markAsDone(todoid) {
+            console.log(todoid);
+            //now setting it to done
+            const buttonUpdate = document.getElementById(todoid);
+            buttonUpdate.children[2].innerHTML = "Done!";
+        }
+        function createChild(title, description, id){
+            
+            const child = document.createElement("div");
+            const grandChild1 = document.createElement("div");
+            const grandChild2 = document.createElement("div");
+            const grandChild3 = document.createElement("button");
+
+            grandChild1.innerHTML = title;
+            grandChild2.innerHTML = description;
+            grandChild3.innerHTML = "Mark as Done";
+
+            // here in grandchild 3 add id and increase it then change it to done
+            grandChild3.setAttribute("onClick",  `markAsDone(${id})`);
+
+            child.appendChild(grandChild1);
+            child.appendChild(grandChild2);
+            child.appendChild(grandChild3);
+
+            //set id to child div such that i can see the numbering
+            child.setAttribute("id", id);
+
+
+            return child;
+
+        }
+/*
+        function addTodo() {
+            const title = document.getElementById("title").value;
+            const description = document.getElementById("description").value;
+            const parent = document.getElementById("container");
+
+
+            //here creating a append with function call to where it willb created
+            parent.appendChild(createChild(title, description, globalId++));
+        }
+*/
+
+        function updateDomAccordingToState( state ){
+            const parent =document.getElementById("container");
+            parent.innerHTML= ""; //cleared container 
+
+            for(let i=0;i<state.length;i++){
+                const child = createChild(state[i].title, state[i].description, state[i].id);
+                parent.appendChild(child);
+            }
+        }
+
+        // getting data form back-end server
+        window.setInterval(async function() {
+            const response = await fetch('https://sum-server.100xdevs.com/todos');
+            const json = await response.json();
+
+            updateDomAccordingToState(json.todos);
+        }, 5000);
+
+    </script>
+</body>
+</html>
