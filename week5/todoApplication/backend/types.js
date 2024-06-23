@@ -16,11 +16,11 @@ const createTodo = zod.object({
 	description: zod.string(),
 });
 
-const updateTodo = zod.object({
+const updatedTodo = zod.object({
 	id: zod.string(),
 });
 
 module.exports = {
 	createTodo,
-	updateTodo,
+	updatedTodo,
 };

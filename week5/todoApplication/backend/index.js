@@ -1,5 +1,5 @@
-const { express } = require("express");
-const { createTodo, updateTodo } = require("./types");
+const express = require("express");
+const { createTodo, updatedTodo } = require("./types");
 const { todo } = require("./db");
 const app = express();
 
@@ -16,7 +16,7 @@ app.post("/todo", async function (req, res) {
 
 	try {
 		await todo.create({
-			title: parsedPayload.title,
+			title: creatPayload.title,
 			description: creatPayload.description,
 			completed: false,
 		});
@@ -40,26 +40,42 @@ app.get("/todos", async function (req, res) {
 });
 
 app.put("/completed", async function (req, res) {
-	const updateTodo = req.body;
-	const parsedUpdate = updateTodo.safeParse(updateTodo);
+	const updateTodoPayload = req.body;
+	const parsedUpdate = updatedTodo.safeParse(updateTodoPayload);
 
 	if (!parsedUpdate.success) {
 		res.status(411).json({
 			msg: "you sent wrong inputs",
 		});
 		return;
+	} else {
+		console.log(parsedUpdate);
 	}
 
-	await todo.update(
-		{
-			_id: parsedUpdate.id,
-		},
-		{
-			completed: true,
-		}
-	);
+	try {
+		const status = await todo.findByIdAndUpdate(
+			{
+				_id: parsedUpdate.data.id,
+			},
+			{
+				completed: true,
+			}
+		);
 
-	res.json({
-		msg: "todo marked completed",
-	});
+		if (status.nmodified === 0) {
+			res.status(404).json({
+				msg: "not found or alreadyu completed",
+			});
+		} else {
+			res.json({
+				msg: "todo marked completed",
+			});
+		}
+	} catch (e) {
+		console.log(e);
+	}
+});
+
+app.listen(3000, () => {
+	console.log("app running at local host 3000");
 });
