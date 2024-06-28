@@ -16,4 +16,3 @@ function Header({ title }) {
 }
 
 export default App;
-``;
