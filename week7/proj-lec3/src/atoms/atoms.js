@@ -18,12 +18,23 @@ export const notificationAtom = atom({
 
 export const notificationAtom = atom({
 	key: "notificationAtom",
+	/*
 	default: {
 		networks: 0,
 		jobs: 0,
 		messaging: 0,
 		notifications: 0,
 	},
+	*/
+
+	default: selector({
+		key: "notificationSelector",
+		get: async () => {
+			await new Promise((r) => setTimeout(r, 5000));
+			const res = await axios.get("http://localhost:8080/notifications");
+			return res.data;
+		},
+	}),
 });
 
 export const meSelector = selector({

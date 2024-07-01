@@ -21,12 +21,13 @@ function MyApp() {
 		notificationAtom
 	);
 	const totalCount = useRecoilValue(meSelector);
-
+	/*
 	useEffect(() => {
 		axios.get("http://localhost:8080/notifications").then((res) => {
 			setNotificationCount(res.data);
 		});
 	}, []);
+*/
 
 	return (
 		<>
