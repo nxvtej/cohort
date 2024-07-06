@@ -1,0 +1,18 @@
+1. data fetching hook
+
+    const [todo, setTodo] = useState();
+
+    useEffect(() => {
+        axios.get() . then(res => setTodo(res.data.todo))
+    }, [])
+
+
+    need to do all these steps to fetch data from servers and populate the todos array 
+
+
+
+    doing this into 
+    
+
+    const todo = useTodo();   //creating such hook that does all that part is data fetching hooks
+    
